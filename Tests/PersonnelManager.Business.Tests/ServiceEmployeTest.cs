@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PersonnelManager.Business.Exceptions;
 using PersonnelManager.Business.Services;
 using PersonnelManager.Dal.Data;
 using PersonnelManager.Dal.Entites;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersonnelManager.Business.Tests
 {
@@ -44,7 +42,7 @@ namespace PersonnelManager.Business.Tests
                 serviceEmploye.EnregistrerOuvrier(ouvrier);
             });
 
-            Assert.AreEqual("La date d'embauche doit être > 1920", 
+            Assert.AreEqual("La date d'embauche doit être > 1920",
                 exception.Message);
         }
 
@@ -76,7 +74,22 @@ namespace PersonnelManager.Business.Tests
         [TestMethod]
         public void DateEmbaucheCadreAnterieureAujourdhuiPlus3Mois()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerCadre(It.IsAny<Cadre>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = (DateTime.Today).AddMonths(4)
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerCadre(cadre);
+            });
+
+            Assert.AreEqual("La date d'embauche ne pas être au-delà de 3 mois",
+                exception.Message);
         }
 
         [TestMethod]

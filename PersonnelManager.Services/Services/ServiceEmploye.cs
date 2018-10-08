@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using PersonnelManager.Business.Exceptions;
 using PersonnelManager.Dal.Data;
 using PersonnelManager.Dal.Entites;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PersonnelManager.Business.Services
 {
@@ -41,6 +41,11 @@ namespace PersonnelManager.Business.Services
             if (cadre.DateEmbauche.Year <= 1920)
             {
                 throw new BusinessException("La date d'embauche doit être > 1920");
+            }
+
+            if (cadre.DateEmbauche.Month <= DateTime.Today.AddMonths(4).Month)
+            {
+                throw new BusinessException("La date d'embauche ne doit pas être au-delà de 3 mois");
             }
 
             this.dataEmploye.EnregistrerCadre(cadre);

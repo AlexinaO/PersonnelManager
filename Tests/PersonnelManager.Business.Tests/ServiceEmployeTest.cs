@@ -156,7 +156,21 @@ namespace PersonnelManager.Business.Tests
         [TestMethod]
         public void InterdireCaracteresSpeciauxDansNomEtPrenomCadre()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerCadre(It.IsAny<Cadre>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gerard",
+                DateEmbauche = (DateTime.Today),
+                SalaireMensuel = 2500
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerCadre(cadre);
+            });
+            Assert.AreEqual("Le nom et le prénom ne doivent pas contenir de caractères spéciaux", exception.Message);
         }
 
         [TestMethod]

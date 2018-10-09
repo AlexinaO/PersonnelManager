@@ -4,6 +4,7 @@ using PersonnelManager.Dal.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace PersonnelManager.Business.Services
 {
@@ -53,7 +54,14 @@ namespace PersonnelManager.Business.Services
                 throw new BusinessException("Le salaire d'un cadre ne peut pas être négatif");
             }
 
-            this.dataEmploye.EnregistrerCadre(cadre);
+            Regex regex = new Regex(@"^[A-Z][a-z\D\-\'][^$@#^%§!\p{P}\*""] + $");
+            Match matchNom = regex.Match(cadre.Nom);
+            Match matchPrenom = regex.Match(cadre.Prenom);
+            if (matchNom.Success && matchPrenom.Success)
+            {
+                this.dataEmploye.EnregistrerCadre(cadre);
+            }
+            throw new BusinessException("Le nom et le prénom ne doivent pas contenir de caractères spéciaux");
         }
 
         public void EnregistrerOuvrier(Ouvrier ouvrier)

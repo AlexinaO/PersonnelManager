@@ -67,6 +67,10 @@ namespace PersonnelManager.Business.Services
             {
                 throw new BusinessException("La date d'embauche doit être > 1920");
             }
+            if (ouvrier.DateEmbauche.Month <= DateTime.Today.AddMonths(4).Month)
+            {
+                throw new BusinessException("La date d'embauche ne doit pas être au-delà de 3 mois");
+            }
 
             this.dataEmploye.EnregistrerOuvrier(ouvrier);
         }

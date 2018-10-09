@@ -88,14 +88,29 @@ namespace PersonnelManager.Business.Tests
                 serviceEmploye.EnregistrerCadre(cadre);
             });
 
-            Assert.AreEqual("La date d'embauche ne pas être au-delà de 3 mois",
+            Assert.AreEqual("La date d'embauche ne doit pas être au-delà de 3 mois",
                 exception.Message);
         }
 
         [TestMethod]
         public void DateEmbaucheOuvrierAnterieureAujourdhuiPlus3Mois()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var ouvrier = new Ouvrier
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = (DateTime.Today).AddMonths(4),
+                TauxHoraire = 12
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerOuvrier(ouvrier);
+            });
+            Assert.AreEqual("La date d'embauche ne doit pas être au-delà de 3 mois",
+                exception.Message);
         }
 
         [TestMethod]

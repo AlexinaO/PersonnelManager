@@ -161,7 +161,7 @@ namespace PersonnelManager.Business.Tests
             var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
             var cadre = new Cadre
             {
-                Nom = "Dup/0nt",
+                Nom = "Dup/ont",
                 Prenom = "Gér@rd",
                 DateEmbauche = (DateTime.Today),
                 SalaireMensuel = 2500
@@ -176,7 +176,21 @@ namespace PersonnelManager.Business.Tests
         [TestMethod]
         public void InterdireCaracteresSpeciauxDansNomEtPrenomOuvrier()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var ouvrier = new Ouvrier
+            {
+                Nom = "Dup/ont",
+                Prenom = "Gér@rd",
+                DateEmbauche = (DateTime.Today),
+                TauxHoraire = 12
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerOuvrier(ouvrier);
+            });
+            Assert.AreEqual("Le nom et le prénom ne doivent pas contenir de caractères spéciaux", exception.Message);
         }
 
         [TestMethod]

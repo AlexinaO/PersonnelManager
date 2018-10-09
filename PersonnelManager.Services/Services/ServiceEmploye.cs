@@ -87,6 +87,15 @@ namespace PersonnelManager.Business.Services
                 throw new BusinessException("La date d'embauche ne doit pas être au-delà de 3 mois");
             }
 
+            Regex regex = new Regex(@"^[A-Z][a-z\D\-\'][^$@#^%§!\p{P}\*""]+$");
+            Match matchNom = regex.Match(ouvrier.Nom);
+            Match matchPrenom = regex.Match(ouvrier.Prenom);
+            //if(regex.IsMatch(cadre.Nom))
+            if (!matchNom.Success || !matchPrenom.Success)
+            {
+                throw new BusinessException("Le nom et le prénom ne doivent pas contenir de caractères spéciaux");
+            }
+
             this.dataEmploye.EnregistrerOuvrier(ouvrier);
         }
 

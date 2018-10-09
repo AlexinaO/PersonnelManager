@@ -54,14 +54,16 @@ namespace PersonnelManager.Business.Services
                 throw new BusinessException("Le salaire d'un cadre ne peut pas être négatif");
             }
 
-            Regex regex = new Regex(@"^[A-Z][a-z\D\-\'][^$@#^%§!\p{P}\*""] + $");
+            Regex regex = new Regex(@"^[A-Z][a-z\D\-\'][^$@#^%§!\p{P}\*""]+$");
             Match matchNom = regex.Match(cadre.Nom);
             Match matchPrenom = regex.Match(cadre.Prenom);
-            if (matchNom.Success && matchPrenom.Success)
+            //if(regex.IsMatch(cadre.Nom))
+            if (!matchNom.Success || !matchPrenom.Success)
             {
-                this.dataEmploye.EnregistrerCadre(cadre);
+                throw new BusinessException("Le nom et le prénom ne doivent pas contenir de caractères spéciaux");
             }
-            throw new BusinessException("Le nom et le prénom ne doivent pas contenir de caractères spéciaux");
+
+            this.dataEmploye.EnregistrerCadre(cadre);
         }
 
         public void EnregistrerOuvrier(Ouvrier ouvrier)

@@ -161,8 +161,8 @@ namespace PersonnelManager.Business.Tests
             var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
             var cadre = new Cadre
             {
-                Nom = "Dupont",
-                Prenom = "Gerard",
+                Nom = "Dup/0nt",
+                Prenom = "Gér@rd",
                 DateEmbauche = (DateTime.Today),
                 SalaireMensuel = 2500
             };

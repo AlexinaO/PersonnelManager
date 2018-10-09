@@ -43,9 +43,14 @@ namespace PersonnelManager.Business.Services
                 throw new BusinessException("La date d'embauche doit être > 1920");
             }
 
-            if (cadre.DateEmbauche.Month <= DateTime.Today.AddMonths(4).Month)
+            if (cadre.DateEmbauche >= DateTime.Today.AddMonths(3))
             {
                 throw new BusinessException("La date d'embauche ne doit pas être au-delà de 3 mois");
+            }
+
+            if (cadre.SalaireMensuel < 0)
+            {
+                throw new BusinessException("Le salaire d'un cadre ne peut pas être négatif");
             }
 
             this.dataEmploye.EnregistrerCadre(cadre);
@@ -60,14 +65,14 @@ namespace PersonnelManager.Business.Services
 
             if (ouvrier.TauxHoraire <= 0)
             {
-                throw new BusinessException("Taux horaire invalide");
+                throw new BusinessException("Le taux horaire d'un ouvrier ne peut pas être négatif");
             }
 
             if (ouvrier.DateEmbauche.Year <= 1920)
             {
                 throw new BusinessException("La date d'embauche doit être > 1920");
             }
-            if (ouvrier.DateEmbauche.Month <= DateTime.Today.AddMonths(4).Month)
+            if (ouvrier.DateEmbauche >= DateTime.Today.AddMonths(3))
             {
                 throw new BusinessException("La date d'embauche ne doit pas être au-delà de 3 mois");
             }

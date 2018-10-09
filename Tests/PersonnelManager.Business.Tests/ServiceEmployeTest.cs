@@ -81,7 +81,7 @@ namespace PersonnelManager.Business.Tests
             {
                 Nom = "Dupont",
                 Prenom = "Gérard",
-                DateEmbauche = (DateTime.Today).AddMonths(4)
+                DateEmbauche = (DateTime.Today).AddMonths(3)
             };
             var exception = Assert.ThrowsException<BusinessException>(() =>
             {
@@ -102,7 +102,7 @@ namespace PersonnelManager.Business.Tests
             {
                 Nom = "Dupont",
                 Prenom = "Gérard",
-                DateEmbauche = (DateTime.Today).AddMonths(4),
+                DateEmbauche = (DateTime.Today).AddMonths(3),
                 TauxHoraire = 12
             };
             var exception = Assert.ThrowsException<BusinessException>(() =>
@@ -116,13 +116,41 @@ namespace PersonnelManager.Business.Tests
         [TestMethod]
         public void SalaireCadrePositif()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerCadre(It.IsAny<Cadre>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = (DateTime.Today),
+                SalaireMensuel = -2500
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerCadre(cadre);
+            });
+            Assert.AreEqual("Le salaire d'un cadre ne peut pas être négatif", exception.Message);
         }
 
         [TestMethod]
         public void TauxHoraireOuvrierPositif()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var ouvrier = new Ouvrier
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = (DateTime.Today).AddMonths(3),
+                TauxHoraire = -12
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerOuvrier(ouvrier);
+            });
+            Assert.AreEqual("Le taux horaire d'un ouvrier ne peut pas être négatif", exception.Message);
         }
 
         [TestMethod]
